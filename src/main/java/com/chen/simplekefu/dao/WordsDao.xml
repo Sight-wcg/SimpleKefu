@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.chen.simplekefu.dao.WordsDao">
+    <select id="findAllWords"  resultType="com.chen.simplekefu.entity.Words">
+        select * from cs_words;
+    </select>
+
+    <select id="findWordsById" resultType="com.chen.simplekefu.entity.Words">
+        SELECT * FROM cs_words WHERE id=#{id};
+    </select>
+
+    <insert id="insertWords" parameterType="com.chen.simplekefu.entity.Words">
+        insert into cs_words(content,status)values(#{content},#{status});
+    </insert>
+
+    <update id="updateWords" parameterType="com.chen.simplekefu.entity.Words">
+        update cs_words
+        <trim prefix="set" suffixOverrides=",">
+            <if test="content != null">content=#{content},</if>
+            <if test="status != null">status=#{status},</if>
+        </trim>
+        WHERE id=#{id};
+    </update>
+
+    <update id="changeStatus" parameterType="integer">
+        update cs_words set status=#{status} where id=#{id};
+    </update>
+
+    <delete id="deleteWordsById" parameterType="Integer">
+        delete from cs_words where id=#{id};
+    </delete>
+</mapper>

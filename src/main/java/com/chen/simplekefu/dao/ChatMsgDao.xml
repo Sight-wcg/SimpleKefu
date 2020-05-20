@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.chen.simplekefu.dao.ChatMsgDao">
+    <insert id="insertChatMsg" parameterType="com.chen.simplekefu.entity.ChatMsg">
+        insert into cs_chatmsg (toid, toname, fromid, fromname, sendtime, content)
+        values (#{toid},#{toname},#{fromid},#{fromname},#{sendtime},#{content});
+    </insert>
+
+    <select id="getChatMsg" resultType="com.chen.simplekefu.entity.ChatMsg">
+        select * from cs_chatmsg where toid = #{toid} and fromid=#{fromid};
+    </select>
+
+    <select id="getChats" resultType="com.chen.simplekefu.entity.ChatMsg">
+        select * from cs_chatmsg GROUP BY fromid;
+    </select>
+
+</mapper>

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>Simple客服系统后台管理</title>
+    <link rel="stylesheet" href="layui/css/layui.css" th:href="@{/layui/css/layui.css}">
+</head>
+<body class="layui-layout-body">
+<div class="layui-layout layui-layout-admin">
+    <!-- 引入头部区域 -->
+    <div th:replace="admin/admin :: topbar"></div>
+    <!-- 引入侧边栏 -->
+    <div th:replace="admin/admin::sidebar"></div>
+
+    <div class="layui-body">
+        <!-- 内容主体区域 -->
+        <fieldset class="layui-elem-field layui-field-title">
+            <legend>文字信息</legend>
+            <div class="layui-field-box">
+                <iframe id="test" src="https://bot.chatopera.com/dashboard/clients/5ea52d57bd822e0017eea710/faq" frameborder="0" width="1200" scrolling="No" height="1200" leftmargin="0" topmargin="0"></iframe>
+            </div>
+        </fieldset>
+        <table class="layui-hide" id="demo"></table>
+    </div>
+    <!-- 引入页脚 -->
+    <div th:replace="admin/admin::footerbar"></div>
+</div>
+<script src="layui/layui.js" th:src="@{/layui/layui.js}"></script>
+
+<script>
+    layui.use(['element','jquery'], function() {
+        var element = layui.element
+            , $ = layui.$;
+
+        var iframe = $("#test");
+        console.log("111");
+        iframe.onload = function(){
+            console.log("222");
+            alert("框架加载完毕.");
+            iframe.contents().find("body > div.index > div.layout").hide();
+        };
+
+
+    })
+</script>
+</body>
+</html>

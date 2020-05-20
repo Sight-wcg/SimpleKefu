@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>Simple客服系统后台管理</title>
+    <link rel="stylesheet" href="layui/css/layui.css" th:href="@{/layui/css/layui.css}">
+    <style>
+        #msg-box{
+            height: 501px;
+            width: 1000px;
+        }
+        #r-msg{
+            border: 1px solid black;
+            width: 660px;
+            height: 800px;
+            float: left;
+            margin-left: 3px;
+        }
+        #r-msg li{
+            margin-left: 5px;
+        }
+        #l-msg{
+            border: 1px solid black;
+            margin-left: 5px;
+            width: 300px;
+            height: 800px;
+            float: left;
+        }
+        #l-msg li{
+            line-height: 50px;
+            text-align: center;
+            border-bottom: 1px solid gray;
+        }
+        #l-msg li:hover{
+            background-color: #e2e2e2;
+        }
+        .kefu-chat-user,
+        .kefu-chat-text{display: inline-block; *display:inline; *zoom:1; vertical-align:top; font-size: 14px;}
+        .kefu-chat-user{position: absolute; left: 300px;}
+        .kefu-chat-user img{width: 40px; height: 40px; border-radius: 100%;}
+        .kefu-chat-user cite{position: absolute; left: 15px; top: -2px;line-height: 24px; font-size: 12px; white-space: nowrap; color: #999; text-align: left; font-style: normal;}
+        .kefu-chat-user cite i{padding-left: 15px; font-style: normal;}
+        .kefu-chat-text{position: relative; line-height: 22px; margin-top: 25px; padding: 8px 15px; background-color: #e2e2e2; border-radius: 3px; color: #333; word-break: break-all;}
+        /*.kefu-chat-text:after{content: ''; position: absolute; left: -10px; top: 13px; width: 0; height: 0; border-style: dashed; border-color:transparent; overflow:hidden; border-width: 10px; border-top-style: solid; border-top-color: #e2e2e2;}*/
+        .kefu-chat-text{max-width: 462px;}
+        .kefu-chat-text a{color: #33DF83;}
+    </style>
+</head>
+<body class="layui-layout-body">
+<div class="layui-layout layui-layout-admin">
+    <!-- 引入头部区域 -->
+    <div th:replace="admin/admin :: topbar"></div>
+    <!-- 引入侧边栏 -->
+    <div th:replace="admin/admin::sidebar"></div>
+
+    <div class="layui-body">
+        <!-- 内容主体区域 -->
+        <fieldset class="layui-elem-field layui-field-title">
+            <legend>历史会话</legend>
+            <div class="layui-field-box">
+                <div id="msg-box">
+                    <div id="l-msg"></div>
+                    <div id="r-msg"></div>
+                </div>
+            </div>
+        </fieldset>
+        <table class="layui-hide" id="demo"></table>
+    </div>
+    <!-- 引入页脚 -->
+    <div th:replace="admin/admin::footerbar"></div>
+</div>
+<script src="layui/layui.js" th:src="@{/layui/layui.js}"></script>
+
+<script>
+    layui.use(['element','jquery','layer','util'], function() {
+        var element = layui.element
+            ,layer = layui.layer
+            ,util = layui.util
+            , $ = layui.$;
+
+        $.get('/chatMsg/getChats',function (res) {
+            var _html = '<ul>';
+            $.each(res,function (index,e) {
+                _html+= '<li class="msgli" data-toid="'+ e.toid +'" data-fromid="'+ e.fromid+' ">'+ e.toname+'---------------' +e.fromname+'</li>';
+                console.log(e);
+            });
+            _html+= '</ul>';
+            $("#l-msg").append(_html);
+            console.log(res);
+        });
+
+
+        $("#l-msg").on('click','li',function () {
+            $("#r-msg").empty();
+            var toid = $(this).attr("data-toid");
+            var fromid = $(this).attr("data-fromid");
+            $.get('/chatMsg/getChatMsg',{toid:toid,fromid:fromid},function (res) {
+                console.log(res);
+                var _html = '<ul>';
+                $.each(res,function (index,e) {
+                    _html+='<li>';
+                    _html += '<div class="kefu-chat-user">';
+                    _html += '<cite>' + e.fromname +'----->' +e.toname +'<i>' + util.toDateString(e.sendtime*1000) + '</i></cite>';
+                    _html += '</div><div class="kefu-chat-text">' + e.content + '</div>';
+                    _html += '</li>';
+
+                });
+                _html+='</ul>';
+                $("#r-msg").append(_html);
+            })
+        })
+
+
+    })
+</script>
+</body>
+</html>

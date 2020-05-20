@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>Simple客服系统后台管理</title>
+    <link rel="stylesheet" href="layui/css/layui.css" th:href="@{/layui/css/layui.css}">
+</head>
+<body class="layui-layout-body">
+<div class="layui-layout layui-layout-admin">
+    <!-- 引入头部区域 -->
+    <div th:replace="admin/admin :: topbar"></div>
+    <!-- 引入侧边栏 -->
+    <div th:replace="admin/admin::sidebar"></div>
+
+    <div class="layui-body">
+        <!-- 内容主体区域 -->
+        <fieldset class="layui-elem-field layui-field-title">
+            <legend>添加常用语</legend>
+            <div class="layui-field-box">
+                <div>
+                    <form class="layui-form" action="" th:action="@{/words/addWords}">
+                        <div class="layui-form-item layui-form-text">
+                            <label class="layui-form-label">常用语</label>
+                            <div class="layui-input-block">
+                                <textarea name="content" placeholder="请输入内容" class="layui-textarea"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">状态</label>
+                            <div class="layui-input-block">
+                                <input type="checkbox" name="status" value="1" lay-skin="switch" lay-text="启用|禁用">
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item">
+                            <div class="layui-input-block">
+                                <button class="layui-btn" lay-submit lay-filter="formDemo">保存</button>
+                                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </fieldset>
+        <table class="layui-hide" id="demo"></table>
+    </div>
+    <!-- 引入页脚 -->
+    <div th:replace="admin/admin::footerbar"></div>
+</div>
+<script src="layui/layui.js" th:src="@{/layui/layui.js}"></script>
+
+<script>
+    layui.use(['element','jquery','form'], function() {
+        var element = layui.element
+            , $ = layui.$
+            ,form = layui.form;
+
+
+    })
+</script>
+</body>
+</html>

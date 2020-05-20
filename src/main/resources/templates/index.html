@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" type="text/css"  th:href="@{/layui/css/layui.css}">
+</head>
+<body>
+<pre style="padding-top: 50px;padding-left: 50px;color:#000">
+        SimpleKefu演示
+        <a href="#" onclick="openwin()">访客端</a>
+        客服工作台：<a href="#" th:href="@{/login}" target="_blank">localhost:8080/service/login</a>
+        后台管理：<a href="#" th:href="@{/login}" target="_blank">localhost:8080/admin/login</a>
+</pre>
+</body>
+<script th:src="@{/layui/layui.js}" src="layui/layui.js"></script>
+<script>
+    //打开访客端
+    function openClient() {
+        window.open ('/client', 'Simple客服', 'height=580, width=970, top=50, left=188, toolbar=no, menubar=no, scrollbars=no, resizable=no,location=no, status=no')
+    }
+    function openChatbot(){
+        window.open ('/chatbot', 'Simple客服机器人', 'height=580, width=970, top=50, left=188, toolbar=no, menubar=no, scrollbars=no, resizable=no,location=no, status=no')
+    }
+    layui.use(['util', 'layer'], function() {
+        var util = layui.util
+            , $ = layui.$
+            , layer = layui.layer;
+        //固定块
+        util.fixbar({
+            bar1: '&#xe626;'
+            , bar2:'&#xe684;'
+            , css: {right: 50, bottom: 100}
+            , bgcolor: '#AEAEAE'
+            , click: function (type) {
+                if (type === 'bar1') {
+                    openClient();
+                    //layer.msg('icon 是可以随便换的')
+                } else if (type === 'bar2') {
+                    openChatbot();
+                    //layer.msg('两个 bar 都可以设定是否开启')
+                }
+            }
+        });
+    });
+</script>
+</html>

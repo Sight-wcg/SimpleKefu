@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>SimpleKefu客服机器人</title>
+    <link rel="stylesheet" href="/layui/css/layui.css" th:href="@{/layui/css/layui.css}" >
+    <link rel="stylesheet" href="/css/service.css" th:href="@{/css/chatbot.css}">
+</head>
+<body class="layui-layout-body">
+<div class="layui-layout layui-layout-admin">
+    <!--头部区域-->
+    <div class="layui-header">
+        <div class="layui-logo" style="color: white">Simple客服机器人</div>
+    </div>
+
+    <!--内容主体区域-->
+    <div class="layui-body" style="bottom:0">
+        <input type="hidden" id="active-user" data-avatar="" data-name="" data-id=""><!-- 当前对话的用户 -->
+
+        <div class="chat-left" id="chatbox">
+            <!--消息展示区域-->
+            <div class="chat-box kefu-chat-main">
+                <ul id="chats" class="show-chat-detail" style="display: block;">
+
+                </ul>
+            </div>
+            <!--消息发送区域-->
+            <div class="msg-send">
+                <div class="tools-bar">
+                    <!--<i class="layui-icon" style="font-size: 30px;" id="face">&#xe60c;</i>
+                    <i class="layui-icon" style="font-size: 30px;" id="image">&#xe60d;</i>
+                    <i class="layui-icon" style="font-size: 30px;" id="file">&#xe61d;</i>-->
+                </div>
+                <div class="msg-box">
+                    <textarea class="msg-area" id="msg-area" ></textarea>
+                </div>
+                <div class="send-area">
+                    <span style="margin-left:10px;color:gray">快捷键 Enter</span>
+                    <button class="layui-btn layui-btn-small layui-bg-cyan" style="float:right;margin-right:10px;height: 40px;padding: 0 15px;" id="send">
+                        <i class="layui-icon">&#xe609;</i>发送
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!--公司信息-->
+        <div style="width:20%;height:100%;float:left;margin-left:1%" id="info">
+            <div class="layui-card">
+                <div class="layui-card-header" align="center">关于我们</div>
+                <div class="layui-card-body">
+                    <p id="company">公司名称</p>
+                    <p id="present">公司介绍</p>
+                    <p id="phone">电话：</p>
+                    <p>网址：<a href="#" id="website"></a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="/layui/layui.js" th:href="@{/layui/layui.js}"></script>
+<script>
+    layui.use(['element','jquery','table','util','layer','form'], function(){
+        var element = layui.element
+            ,$ = layui.$
+            ,table = layui.table
+            ,util = layui.util
+            ,form = layui.form
+            ,layer = layui.layer;
+    });
+</script>
+<script type="text/javascript" src="http://pv.sohu.com/cityjson?ie=utf-8"></script>
+<script type="text/javascript" src="/js/jquery.min.js" th:href="@{/js/jquery.min.js}"></script>
+<script type="text/javascript" src="/js/jquery.cookie.js" th:href="@{/js/jquery.cookie.js}"></script>
+<script type="text/javascript" src="/js/chatbot.js" th:href="@{/js/chatbot.js}"></script>
+</body>
+</html>

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>Simple客服系统后台管理</title>
+    <link rel="stylesheet" href="layui/css/layui.css" th:href="@{/layui/css/layui.css}">
+</head>
+<body class="layui-layout-body">
+<div class="layui-layout layui-layout-admin">
+    <div class="layui-header" th:fragment="topbar">
+        <div class="layui-logo">Simple客服系统后台管理</div>
+        <!-- 头部区域（可配合layui已有的水平导航） -->
+        <ul class="layui-nav layui-layout-right">
+            <li class="layui-nav-item">
+                <a href="javascript:;">
+                    <img src="http://t.cn/RCzsdCq" class="layui-nav-img">
+                    <span th:text="${session.userInfo.username}"></span>
+                </a>
+                <dl class="layui-nav-child">
+                    <dd><a href="">基本资料</a></dd>
+                </dl>
+            </li>
+            <li class="layui-nav-item"><a href="" th:href="@{/logout}">注销</a></li>
+        </ul>
+    </div>
+
+    <div class="layui-side layui-bg-black" th:fragment="sidebar">
+        <div class="layui-side-scroll">
+            <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
+            <ul class="layui-nav layui-nav-tree"  lay-filter="test">
+                <li class="layui-nav-item ">
+                    <a class="" href="javascript:;">客服管理</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="javascript:;" th:href="@{/user/page}">客服信息</a></dd>
+                        <dd><a href="javascript:;" th:href="@{/user/add/page}">添加客服</a></dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item">
+                    <a href="javascript:;">常用语管理</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="javascript:;" th:href="@{/words/page}">常用语信息</a></dd>
+                        <dd><a href="javascript:;" th:href="@{/words/add/page}">添加常用语</a></dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item"><a href="" th:href="@{/message/page}">工单管理</a></li>
+                <li class="layui-nav-item"><a href="" th:href="@{/chatMsg/page}">历史会话</a></li>
+                <li class="layui-nav-item"><a href="" th:href="@{/chatbot/page}">机器人管理</a></li>
+                <li class="layui-nav-item">
+                    <a href="javascript:;">知识库管理</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="javascript:;" th:href="@{/faq/categories/page}">分类管理</a></dd>
+                        <dd><a href="javascript:;" th:href="@{/faq/page}">知识库信息</a></dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item">
+                    <a href="javascript:;">系统设置</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="javascript:;" th:href="@{/company/page}">公司信息</a></dd>
+                    </dl>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="layui-body">
+        <!-- 内容主体区域 -->
+        <div style="padding: 15px;" id="textBox" >欢迎登录Simple客服</div>
+        <table class="layui-hide" id="demo"></table>
+    </div>
+
+    <div class="layui-footer" th:fragment="footerbar">
+        <!-- 底部固定区域 -->
+        © 2020 - Simple客服系统版权所有
+    </div>
+</div>
+<script src="layui/layui.js" th:src="@{/layui/layui.js}"></script>
+<script>
+    //JavaScript代码区域
+    layui.use('element', function(){
+        var element = layui.element;
+    });
+</script>
+</body>
+</html>

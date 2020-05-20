@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>Simple客服系统后台管理</title>
+    <link rel="stylesheet" href="layui/css/layui.css" th:href="@{/layui/css/layui.css}">
+</head>
+<body class="layui-layout-body">
+<div class="layui-layout layui-layout-admin">
+    <!-- 引入头部区域 -->
+    <div th:replace="admin/admin :: topbar"></div>
+    <!-- 引入侧边栏 -->
+    <div th:replace="admin/admin::sidebar"></div>
+
+    <div class="layui-body">
+        <!-- 内容主体区域 -->
+        <fieldset class="layui-elem-field layui-field-title">
+            <legend>知识库</legend>
+            <div class="layui-field-box">
+                <a th:href="@{/faq/chatopera}" >
+                <button type="button" class="layui-btn layui-btn-xs" style="margin-left: 4px;margin-bottom: 1px">
+                    <i class="layui-icon">&#xe609;</i> Chatopera工作台
+                </button>
+                </a>
+                <table class="layui-hide" id="faqlistTable" lay-filter="faqlistTable"></table>
+            </div>
+        </fieldset>
+
+    </div>
+    <!-- 引入页脚 -->
+    <div th:replace="admin/admin::footerbar"></div>
+</div>
+<script src="layui/layui.js" th:src="@{/layui/layui.js}"></script>
+<!--工具栏-->
+<script type="text/html" id="barDemo">
+    <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">查看</a>
+    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+</script>
+<script>
+    layui.use(['element','jquery','table','util','layer','form'], function(){
+        var element = layui.element
+            ,$ = layui.$
+            ,table = layui.table
+            ,util = layui.util
+            ,form = layui.form
+            ,layer = layui.layer;
+        var statusTpl = function (d) { // 参数d是当前行数据
+            var isCkecked = d.enabled == true ? "checked" : "";
+            return '<input type="checkbox" lay-skin="switch" lay-filter="state" lay-text="启用|禁用" '+ isCkecked +'> ';
+        };
+        form.on('switch(state)',function (obj) {
+            //根据业务判断是开启还是关闭
+            var state = obj.elem.checked?true:false;
+            console.log(state);
+            //根据相对位置取id
+            var id = obj.othis.parents('tr').find("td :first").text();
+            console.log(id);
+            $.get("/words/changeStatus?id="+id+"&status="+ state);
+            table.render();
+        });
+
+        //监听行工具事件
+        table.on('tool(wordsTable)', function(obj) {
+            var data = obj.data; //获得当前行数据
+            var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+            var tr = obj.tr; //获得当前行 tr 的 DOM 对象（如果有的话）
+            console.log(data);//可以打印出当前行的信息
+            if(data.enabled == true){
+                data.status = '启用'
+            }else {
+                data.status = '禁用'
+            }
+            switch(layEvent){
+                case 'detail':
+                    layer.open({
+                        title:'常用语信息',
+                        type:1,
+                        content:' <table align="center" cellspacing="30" cellpadding="10">\n' +
+                            '    <tr><td></td></tr> '+
+                            '    <tr><td >&emsp;&emsp;状态:&emsp;</td><td>'+ data.status +'&emsp;&emsp;</td></tr>\n' +
+                            '    <tr><td >&emsp;&emsp;内容:&emsp;</td><td>'+ data.content +'&emsp;&emsp;</td></tr>\n' +
+                            '    <tr><td></td></tr> '+
+                            '    </table>'
+                    });
+                    break;
+                case 'del':
+                    // layer.msg('删除');
+                    layer.confirm('确认删除该条信息？', function(index) {
+                        obj.del(); //删除对应行（tr）的DOM结构，并更新缓存
+                        layer.close(index);
+                        //执行动作
+                        $.get("/words/deleteWords?id="+ data.id);
+                        // window.location.href = "/user/deleteUser?id="+ data.id;
+                    });
+                    break;
+                case 'edit':
+                    //layer.msg('编辑');
+                    window.location.href = "/words/update/page?id="+ data.id;
+                    break;
+            }
+        });
+
+        //展示已知数据
+        table.render({
+            elem: '#faqlistTable'
+            ,width:1180
+            ,url:'/faq/faqlist'
+            ,parseData:function (res) {
+                return{
+                    "code": res.rc, //解析接口状态
+                    "msg": 'success', //解析提示文本
+                    "data": res.data //解析数据列表
+                }
+            }
+            ,cols: [
+                [
+                    {field:'id',  title: 'id'},
+                    {field:'post',  title: '问题'},
+                    {field:'reply',  title: '答案'},
+                    {field:'categories', title: '分类'},
+                    {field:'enabled',  title: '状态', align:'center', templet: statusTpl},
+                    {title:'操作',fixed: 'right', width: 165, align:'center', toolbar: '#barDemo'}
+                ]
+            ]
+        });
+    });
+</script>
+</body>
+</html>

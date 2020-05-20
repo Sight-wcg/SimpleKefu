@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>Simple客服系统后台管理</title>
+    <link rel="stylesheet" href="layui/css/layui.css" th:href="@{/layui/css/layui.css}">
+</head>
+<body class="layui-layout-body">
+<div class="layui-layout layui-layout-admin">
+    <!-- 引入头部区域 -->
+    <div th:replace="admin/admin :: topbar"></div>
+    <!-- 引入侧边栏 -->
+    <div th:replace="admin/admin::sidebar"></div>
+
+    <div class="layui-body">
+        <!-- 内容主体区域 -->
+        <fieldset class="layui-elem-field layui-field-title">
+            <legend>客服信息</legend>
+            <div class="layui-field-box">
+        <table class="layui-hide" id="userTable" lay-filter="userTable"></table>
+            </div>
+        </fieldset>
+    </div>
+    <!-- 引入页脚 -->
+    <div th:replace="admin/admin::footerbar"></div>
+</div>
+<script src="layui/layui.js" th:src="@{/layui/layui.js}"></script>
+<script type="text/html" id="barDemo">
+    <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">查看</a>
+    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+</script>
+
+<script type="text/html" id="formatDate">
+    {{layui.util.toDateString(d.regtime*1000, 'yyyy-MM-dd HH:mm')}}
+</script>
+<script>
+    layui.use(['element','jquery','table','util','layer'], function(){
+        var element = layui.element
+            ,$ = layui.$
+            ,table = layui.table
+            ,util = layui.util
+            ,layer = layui.layer;
+
+        $('#textBox').hide();
+        //监听行工具事件
+        table.on('tool(userTable)', function(obj) {
+            var data = obj.data; //获得当前行数据
+            var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+            var tr = obj.tr; //获得当前行 tr 的 DOM 对象（如果有的话）
+            console.log(tr);//可以打印出当前行的信息
+            if(data.auth == '1'){
+                data.auth = '管理员'
+            }else if(data.auth == '2'){
+                data.auth = '客服'
+            }
+            if(data.online == '0'){
+                data.online = '离线'
+            }else if(data.online == '1'){
+                data.online = '在线'
+            }
+            if(data.status == '0'){
+                data.status = '禁用'
+            }else if(data.status == '1'){
+                data.status = '正常'
+            }
+            switch(layEvent){
+                case 'detail':
+                    layer.open({
+                        title:'用户信息',
+                        type:1,
+                        content:' <table align="center" cellspacing="30" cellpadding="10">\n' +
+                            '    <tr><td >&emsp;&emsp;账&emsp;&emsp;号:&emsp;</td><td>'+ data.account +'&emsp;&emsp;</td></tr>\n' +
+                            '    <tr><td >&emsp;&emsp;姓&emsp;&emsp;名:&emsp;</td><td>'+ data.username +'&emsp;&emsp;</td></tr>\n' +
+                            '    <tr><td >&emsp;&emsp;注册时间: </td><td>'+ util.toDateString(data.regtime*1000,'yyyy-MM-dd HH:mm') +'&emsp;&emsp;</td></tr>\n' +
+                            '    <tr><td >&emsp;&emsp;权&emsp;&emsp;限: </td><td>'+ data.auth +'&emsp;&emsp;</td></tr>\n' +
+                            '    <tr><td >&emsp;&emsp;在线状态: </td><td>'+ data.online +'&emsp;&emsp;</td></tr>\n' +
+                            '    <tr><td >&emsp;&emsp;账号状态: </td><td>' + data.status +'&emsp;&emsp;</td></tr>\n' +
+                            '    </table>'
+                    });
+
+                    break;
+                case 'del':
+                   // layer.msg('删除');
+                    layer.confirm('确认删除该用户？', function(index) {
+                        obj.del(); //删除对应行（tr）的DOM结构，并更新缓存
+                        layer.close(index);
+                        //执行动作
+                        $.get("/user/deleteUser?id="+ data.id);
+                       // window.location.href = "/user/deleteUser?id="+ data.id;
+                    });
+                    break;
+                case 'edit':
+                    //layer.msg('编辑');
+                    window.location.href = "/user/updata/page?id="+ data.id;
+                    break;
+            }
+        });
+
+        //展示已知数据
+        table.render({
+            elem: '#userTable'
+            ,url:'/user/getAllUser'
+            ,cols: [
+                [
+                    {field:'id',  title: 'id'},
+                    {field:'account', title: '账号'},
+                    {field:'username',  title: '姓名'},
+                    {field:'regtime',  title: '注册时间',templet: '#formatDate'},
+                    {field:'auth',  title: '权限',templet: function(d){if(d.auth == 1){return '管理员'}else{return '客服'}}},
+                    {field:'online',  title: '在线状态',templet: function(d){if(d.online == 1){return '在线'}else{return '离线'}}},
+                    {field:'status',  title: '账号状态',templet: function(d){if(d.status == 1){return '正常'}else{return '禁用'}}},
+                    {title:'操作',fixed: 'right', width: 165, align:'center', toolbar: '#barDemo'}
+                ]
+            ]
+        });
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>Simple客服系统后台管理</title>
+    <link rel="stylesheet" href="layui/css/layui.css" th:href="@{/layui/css/layui.css}">
+</head>
+<body class="layui-layout-body">
+<div class="layui-layout layui-layout-admin">
+    <!-- 引入头部区域 -->
+    <div th:replace="admin/admin :: topbar"></div>
+    <!-- 引入侧边栏 -->
+    <div th:replace="admin/admin::sidebar"></div>
+
+    <div class="layui-body">
+        <!-- 内容主体区域 -->
+        <fieldset class="layui-elem-field layui-field-title">
+            <legend>公司信息</legend>
+            <div class="layui-field-box">
+
+        <div>
+            <form class="layui-form" action="" th:action="@{/company/updataCompany}" lay-filter="companyForm">
+                <div class="layui-form-item layui-hide">
+                    <label class="layui-form-label">id</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="id" required  lay-verify="" placeholder="隐藏" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">公司名称</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="company" required  lay-verify="required" placeholder="请输入公司名称" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">官网链接</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="website" required  lay-verify="required" placeholder="请输入官网链接" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">联系电话</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="phone" required  lay-verify="required" placeholder="请输入电话" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item layui-form-text">
+                    <label class="layui-form-label">公司介绍</label>
+                    <div class="layui-input-block">
+                        <textarea name="present" placeholder="请输入内容" class="layui-textarea"></textarea>
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <button class="layui-btn" lay-submit lay-filter="formDemo">保存</button>
+                        <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+            </div>
+        </fieldset>
+    </div>
+    <!-- 引入页脚 -->
+    <div th:replace="admin/admin::footerbar"></div>
+</div>
+<script src="layui/layui.js" th:src="@{/layui/layui.js}"></script>
+
+<script>
+    layui.use(['element','jquery','form'], function() {
+        var element = layui.element
+            ,form = layui.form
+            , $ = layui.$;
+
+        //获取公司信息，填充到表单
+        $.ajax({
+            url:'/company/getCompany?id=' + 1,
+            success:function (data) {
+                console.log(data);
+                form.val("companyForm",{
+                    "id":data.id
+                    ,"company":data.company
+                    ,"website":data.website
+                    ,"phone":data.phone
+                    ,"present":data.present
+                });
+            }
+        })
+    });
+</script>
+</body>
+</html>

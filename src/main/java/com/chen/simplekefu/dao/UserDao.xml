@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.chen.simplekefu.dao.UserDao">
+    <select id="findAllUser"  resultType="com.chen.simplekefu.entity.User">
+        select * from cs_user;
+    </select>
+    <select id="findUserById" resultType="com.chen.simplekefu.entity.User">
+        SELECT * FROM cs_user WHERE id=#{id};
+    </select>
+
+    <select id="findUserByAccountAndPassword" resultType="com.chen.simplekefu.entity.User">
+        select id, account, username, regtime, auth, online, status from cs_user where account=#{account} and password=#{password};
+    </select>
+    <select id="getOnlineUser" resultType="com.chen.simplekefu.entity.User">
+        select id, account, username, regtime, auth, online, status from cs_user where online=1 and auth=2 and status=1;
+    </select>
+
+    <insert id="insertUser" parameterType="com.chen.simplekefu.entity.User">
+        insert into cs_user(account, username, password, regtime, auth, status, online)values(#{account},#{username},#{password},#{regtime},#{auth},#{status},#{online});
+    </insert>
+
+    <update id="updataUser" parameterType="com.chen.simplekefu.entity.User">
+        update cs_user
+        <trim prefix="set" suffixOverrides=",">
+            <if test="account != null">account=#{account},</if>
+            <if test="username != null">username=#{username},</if>
+            <if test="password != null">password=#{password},</if>
+            <if test="regtime != null">regtime=#{regtime},</if>
+            <if test="status != null">status=#{status},</if>
+            <if test="auth != null">auth=#{auth},</if>
+            <if test="online != null">online=#{online},</if>
+        </trim>
+        WHERE id=#{id};
+    </update>
+    <delete id="deleteUserById" parameterType="Integer">
+        delete from cs_user where id=#{id};
+    </delete>
+</mapper>

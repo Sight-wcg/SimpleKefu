@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>SimpleKefu客服</title>
+    <link rel="stylesheet" href="/layui/css/layui.css" th:href="@{/layui/css/layui.css}" >
+    <link rel="stylesheet" href="/css/service.css" th:href="@{/css/client.css}">
+</head>
+<body class="layui-layout-body">
+<div class="layui-layout layui-layout-admin">
+    <!--头部区域-->
+    <div class="layui-header">
+        <div class="layui-logo" style="color: white" id="hs">Simple客服</div>
+        <ul class="layui-nav layui-layout-right">
+            <li style="margin-top: 10%">
+                <a href="javascript:;">
+                    <button class="layui-btn " id="workorderBtn">
+                        <i class="layui-icon"></i> 留言
+                    </button>
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <!--内容主体区域-->
+    <div class="layui-body" style="bottom:0">
+        <input type="hidden" id="active-user"  data-name="" data-id=""><!-- 当前对话的用户 -->
+        <!--留言区域-->
+        <div id="workorder" hidden>
+            <pre>
+
+         您好，请填写您的联系方式，如果没有留下联系方式，客服将无法和您联系！
+
+            </pre>
+            <form class="layui-form" action="" th:action="@{/message/add}" lay-filter="companyForm">
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">姓名</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="username" required  lay-verify="required" placeholder="姓名" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">电话</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="phone" required  lay-verify="required" placeholder="手机号" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">邮箱</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="email" required  lay-verify="required" placeholder="邮箱" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item layui-form-text">
+                    <label class="layui-form-label">内容</label>
+                    <div class="layui-input-block">
+                        <textarea name="content" placeholder="请输入您遇到的问题，我们会尽快与您联系" class="layui-textarea"></textarea>
+                    </div>
+                </div>
+                <div class="layui-form-item layui-hide">
+                    <label class="layui-form-label">id</label>
+                    <div class="layui-input-inline">
+                        <input type="text" value="0" name="status" required  lay-verify="" placeholder="隐藏" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <button class="layui-btn" lay-submit lay-filter="formDemo">提交留言</button>
+                        <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div class="chat-left" id="chatbox">
+            <!--消息展示区域-->
+            <div class="chat-box kefu-chat-main">
+                <ul id="chats" class="show-chat-detail" style="display: block;">
+
+                </ul>
+            </div>
+            <!--消息发送区域-->
+            <div class="msg-send">
+                <div class="tools-bar">
+                    <i class="layui-icon" style="font-size: 30px;" id="face">&#xe60c;</i>
+                    <i class="layui-icon" style="font-size: 30px;" id="image">&#xe60d;</i>
+                    <!--<i class="layui-icon" style="font-size: 30px;" id="file">&#xe61d;</i>-->
+                </div>
+                <div class="msg-box">
+                    <textarea class="msg-area" id="msg-area" ></textarea>
+                </div>
+                <div class="send-area">
+                    <span style="margin-left:10px;color:gray">快捷键 Enter</span>
+                    <button class="layui-btn layui-btn-small layui-bg-cyan" style="float:right;margin-right:10px;height: 40px;padding: 0 15px;" id="send">
+                        <i class="layui-icon">&#xe609;</i>发送
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!--公司信息-->
+        <div style="width:20%;height:100%;float:left;margin-left:1%" id="info">
+            <div class="layui-card">
+                <div class="layui-card-header" align="center">关于我们</div>
+                <div class="layui-card-body">
+                    <p id="company">公司名称</p>
+                    <p id="present">公司介绍</p>
+                    <p id="phone">电话：</p>
+                    <p>网址：<a href="#" id="website"></a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 转接提示层 -->
+<div class="layui-form" id="change-box" style="display: none">
+    <div class="layui-form-item" style="margin-top: 20px">
+        <label class="layui-form-label">选择分组</label>
+        <div class="layui-input-block" style="width: 70%" >
+            <select lay-verify="required" lay-filter="group">
+                <option value=""></option>
+                {if !empty($groups)}
+                {foreach name="groups" item="vo"}
+                <option value="{$vo['id']}">{$vo['name']}</option>
+                {/foreach}
+                {/if}
+            </select>
+        </div>
+    </div>
+</div>
+<!-- 转接提示层 -->
+
+<script src="/layui/layui.js" th:href="@{/layui/layui.js}"></script>
+<script>
+    layui.use(['element','jquery','table','util','layer','form'], function() {
+        var element = layui.element
+            , $ = layui.$
+            , table = layui.table
+            , util = layui.util
+            , form = layui.form
+            , layer = layui.layer;
+    });
+</script>
+<script type="text/javascript" src="http://pv.sohu.com/cityjson?ie=utf-8"></script>
+<script type="text/javascript" src="/js/jquery.min.js" th:href="@{/js/jquery.min.js}"></script>
+<script type="text/javascript" src="/js/jquery.cookie.js" th:href="@{/jquery.cookie.js}"></script>
+<script type="text/javascript" src="/js/client.js" th:href="@{/js/client.js}"></script>
+</body>
+</html>

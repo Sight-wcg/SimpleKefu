@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.chen.simplekefu.dao.VisitorDao">
+
+
+    <select id="getVisitor" resultType="com.chen.simplekefu.entity.Visitor">
+        SELECT * FROM cs_visitor WHERE id=#{id};
+    </select>
+
+    <select id="getVisitorMax" resultType="integer">
+        SELECT count(id) FROM cs_visitor;
+    </select>
+
+    <insert id="addVisitor" parameterType="com.chen.simplekefu.entity.Visitor">
+        insert into cs_visitor(visitid, ip, address)values(#{visitid},#{ip},#{address});
+    </insert>
+
+
+</mapper>

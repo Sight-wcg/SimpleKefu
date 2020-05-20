@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.chen.simplekefu.dao.ChatbotDao">
+    <update id="updateChatbot" parameterType="com.chen.simplekefu.entity.Chatbot">
+        update cs_chatbot
+        <trim prefix="set" suffixOverrides=",">
+            <if test="clientId != null">clientId=#{clientId},</if>
+            <if test="secret != null">secret=#{secret},</if>
+            <if test="status != null">status=#{status},</if>
+        </trim>
+        WHERE id=#{id};
+    </update>
+
+    <select id="getChatbot" resultType="com.chen.simplekefu.entity.Chatbot">
+        select * from cs_chatbot where id=1;
+    </select>
+
+
+</mapper>
